@@ -81,11 +81,11 @@ class ImageSlider @JvmOverloads constructor(
         titleBackground = typedArray.getResourceId(R.styleable.ImageSlider_iss_title_background, R.drawable.gradient)
 
         if (typedArray.getString(R.styleable.ImageSlider_iss_text_align) != null){
-            textAlign = typedArray.getString(R.styleable.ImageSlider_iss_text_align)
+            textAlign = typedArray.getString(R.styleable.ImageSlider_iss_text_align)!!
         }
 
         if (typedArray.getString(R.styleable.ImageSlider_iss_indicator_align) != null){
-            indicatorAlign = typedArray.getString(R.styleable.ImageSlider_iss_indicator_align)
+            indicatorAlign = typedArray.getString(R.styleable.ImageSlider_iss_indicator_align)!!
         }
 
         if (touchListener != null){
@@ -259,6 +259,13 @@ class ImageSlider @JvmOverloads constructor(
                 Gravity.CENTER
             }
         }
+    }
+
+    /**
+     *  Set Corner radius
+     */
+    fun setCornerRadius(radius: Int){
+        cornerRadius = radius
     }
 
 }

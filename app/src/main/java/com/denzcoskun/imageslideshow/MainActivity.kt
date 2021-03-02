@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         imageList.add(SlideModel("https://bit.ly/37Rn50u", "Baby Owl",ScaleTypes.CENTER_CROP))
         imageList.add(SlideModel("https://bit.ly/2BteuF2", "Elephants and tigers may become extinct."))
         imageList.add(SlideModel("https://bit.ly/3fLJf72", "The population of elephants is decreasing in the world."))
+        imageList.add(SlideModel("https://4.bp.blogspot.com/-uhjF2kC3tFc/U_r3myvwzHI/AAAAAAAACiw/tPQ2XOXFYKY/s1600/Circles-3.gif", "The population of elephants is decreasing in the world."))
 
         imageSlider.setImageList(imageList)
 

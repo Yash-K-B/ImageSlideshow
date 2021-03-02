@@ -7,6 +7,9 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.denzcoskun.imageslider.R
 import com.denzcoskun.imageslider.constants.ActionTypes
 import com.denzcoskun.imageslider.constants.ScaleTypes
@@ -22,20 +25,40 @@ import com.squareup.picasso.Picasso
  * denzcoskun@hotmail.com
  * İstanbul
  */
-class ViewPagerAdapter(context: Context?,
-                       imageList: List<SlideModel>,
-                       private var radius: Int,
-                       private var errorImage: Int,
-                       private var placeholder: Int,
-                       private var titleBackground: Int,
-                       private var scaleType: ScaleTypes?,
-                       private var textAlign: String) : PagerAdapter() {
+class ViewPagerAdapter(
+    context: Context?,
+    imageList: List<SlideModel>,
+    private var radius: Int,
+    private var errorImage: Int,
+    private var placeholder: Int,
+    private var titleBackground: Int,
+    private var scaleType: ScaleTypes?,
+    private var textAlign: String
+) : PagerAdapter() {
 
-    constructor(context: Context, imageList: List<SlideModel>, radius: Int, errorImage: Int, placeholder: Int, titleBackground: Int, textAlign: String) :
-            this(context, imageList, radius, errorImage, placeholder, titleBackground, null, textAlign)
+    constructor(
+        context: Context,
+        imageList: List<SlideModel>,
+        radius: Int,
+        errorImage: Int,
+        placeholder: Int,
+        titleBackground: Int,
+        textAlign: String
+    ) :
+            this(
+                context,
+                imageList,
+                radius,
+                errorImage,
+                placeholder,
+                titleBackground,
+                null,
+                textAlign
+            )
 
     private var imageList: List<SlideModel>? = imageList
-    private var layoutInflater: LayoutInflater? = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
+    private var layoutInflater: LayoutInflater? =
+        context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
 
     private var itemClickListener: ItemClickListener? = null
     private var touchListener: TouchListener? = null
@@ -48,48 +71,52 @@ class ViewPagerAdapter(context: Context?,
         return imageList!!.size
     }
 
-    override fun instantiateItem(container: ViewGroup, position: Int): View{
+    override fun instantiateItem(container: ViewGroup, position: Int): View {
         val itemView = layoutInflater!!.inflate(R.layout.pager_row, container, false)
 
         val imageView = itemView.findViewById<ImageView>(R.id.image_view)
         val linearLayout = itemView.findViewById<LinearLayout>(R.id.linear_layout)
         val textView = itemView.findViewById<TextView>(R.id.text_view)
 
-        if (imageList!![position].title != null){
+        if (imageList!![position].title != null) {
             textView.text = imageList!![position].title
             linearLayout.setBackgroundResource(titleBackground)
             textView.gravity = getGravityFromAlign(textAlign)
             linearLayout.gravity = getGravityFromAlign(textAlign)
-        }else{
+        } else {
             linearLayout.visibility = View.INVISIBLE
         }
 
         // Image from url or local path check.
-        val loader = if (imageList!![position].imageUrl == null){
-            Picasso.get().load(imageList!![position].imagePath!!)
-        }else{
-            Picasso.get().load(imageList!![position].imageUrl!!)
+        val loader = if (imageList!![position].imageUrl == null) {
+            Glide.with(container.context).load(imageList!![position].imagePath!!)
+        } else {
+            Glide.with(container.context).load(imageList!![position].imageUrl!!)
         }
 
-        // set Picasso options.
-        if ((scaleType != null && scaleType == ScaleTypes.CENTER_CROP) || imageList!![position].scaleType == ScaleTypes.CENTER_CROP){
-            loader.fit().centerCrop()
-        } else if((scaleType != null && scaleType == ScaleTypes.CENTER_INSIDE) || imageList!![position].scaleType == ScaleTypes.CENTER_INSIDE){
-            loader.fit().centerInside()
-        }else if((scaleType != null && scaleType == ScaleTypes.FIT) || imageList!![position].scaleType == ScaleTypes.FIT){
-            loader.fit()
+
+        // set Set options.
+        val requestOptions = RequestOptions()
+        if ((scaleType != null && scaleType == ScaleTypes.CENTER_CROP) || imageList!![position].scaleType == ScaleTypes.CENTER_CROP) {
+            requestOptions.centerCrop()
+        } else if ((scaleType != null && scaleType == ScaleTypes.CENTER_INSIDE) || imageList!![position].scaleType == ScaleTypes.CENTER_INSIDE) {
+            requestOptions.centerInside()
+        } else if ((scaleType != null && scaleType == ScaleTypes.FIT) || imageList!![position].scaleType == ScaleTypes.FIT) {
+            requestOptions.fitCenter()
         }
 
-        loader.transform(RoundedTransformation(radius, 0))
+
+        loader.apply(RequestOptions.bitmapTransform(RoundedCorners(radius)))
+            .apply(requestOptions)
             .placeholder(placeholder)
             .error(errorImage)
             .into(imageView)
 
         container.addView(itemView)
 
-        imageView.setOnClickListener{itemClickListener?.onItemSelected(position)}
+        imageView.setOnClickListener { itemClickListener?.onItemSelected(position) }
 
-        if (touchListener != null){
+        if (touchListener != null) {
             imageView!!.setOnTouchListener { v, event ->
                 when (event.action) {
                     MotionEvent.ACTION_MOVE -> touchListener!!.onTouched(ActionTypes.MOVE)
