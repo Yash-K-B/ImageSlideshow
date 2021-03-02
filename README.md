@@ -77,7 +77,10 @@ imageList.add(SlideModel("String Url" or R.drawable, "Title", ScaleTypes.FIT) //
 
 imageSlider.setImageList(imageList, ScaleTypes.FIT) // for all images
 ```
-
+-   You can change corner radius of images
+```kt
+imageSlider.setCornerRadius(24);
+```
 -   You can change title background on xml.
 
 <img src="https://user-images.githubusercontent.com/15522554/85441920-4b3a7480-b598-11ea-9154-338a8577552b.jpg">
@@ -117,7 +120,7 @@ allprojects {
 }
 
 dependencies {
-	implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
+	implementation 'com.github.Yash-K-B:ImageSlideshow:Tag'
 }
 ```
 
